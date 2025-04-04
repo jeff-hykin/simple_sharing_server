@@ -140,14 +140,25 @@ while (port < 10000) {
                     // path
                     const keyList = getKeyList(req.url)
                     if (keyList.length==0){
-                        return returnJson({ value: state, time: Date.now(), })
+                        return returnJson({ t: Date.now(), v: state, })
                     }
                     const output = get({from: state, keyList, failValue: null})
-                    return returnJson({ value: output, time: Date.now(), })
+                    return returnJson({ t: Date.now(), v: output, })
                 // 
                 // write
                 // 
                 } else if (req.method == "POST") {
+                    let value
+                    try {
+                        value = await req.json()
+                    } catch (error) {
+                        return new Response(`Request needs to be json, but was not (happened during ${req.url})`, { status: 405 })
+                    }
+                    // path
+                    const keyList = getKeyList(req.url)
+                    set({on: state, keyList, to: value})
+                    return returnJson({ t: Date.now(), })
+                } else if (req.method == "PUT") {
                     let value
                     try {
                         value = await req.json()
@@ -162,10 +173,10 @@ while (port < 10000) {
                         value = merge({ oldData: existingValue, newData: value })
                     }
                     set({on: state, keyList, to: value})
-                    return returnJson({ time: Date.now(), })
+                    return returnJson({ t: Date.now(), })
                 } else if (req.method == "DELETE") {
                     remove({from: state, keyList})
-                    return returnJson({ time: Date.now(), })
+                    return returnJson({ t: Date.now(), })
                 } else {
                     return new Response(`Method not allowed (${req.method})`, { status: 405 })
                 }
