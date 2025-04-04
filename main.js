@@ -12,6 +12,7 @@ const argsInfo = parseArgs({
         [["--port"], initialValue(`7070`), (str)=>str],
         [["--address"], initialValue(`127.0.0.1`), (str)=>str],
         [["--overrideAddressCheck", ], flag, ],
+        [["--noFallbackPort", ], flag, ],
     ],
     namedArgsStopper: "--",
     allowNameRepeats: true,
@@ -27,7 +28,7 @@ didYouMean({
     autoThrow: true,
     suggestionLimit: 1,
 })
-let {help, version, debug, port, address, overrideAddressCheck} = argsInfo.simplifiedNames
+let {help, version, debug, port, address, overrideAddressCheck, noFallbackPort} = argsInfo.simplifiedNames
 if (help) {
     console.log(`
     Usage: sss
@@ -187,6 +188,9 @@ while (port < 10000) {
         if (!error.stack.includes("AddrInUse: Address already in use (os error 48)")) {
             throw error
         } else {
+            if (noFallbackPort) {
+                throw error
+            }
             shouldWarn && console.warn(`error when trying to start server on port ${port}, trying next port`, error)
         }
         port++
