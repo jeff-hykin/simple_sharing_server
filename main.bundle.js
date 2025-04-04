@@ -7373,7 +7373,8 @@ var argsInfo = le({
     [["--debug", "-d"], Q],
     [["--port"], ae(`7070`), (str) => str],
     [["--address"], ae(`127.0.0.1`), (str) => str],
-    [["--overrideAddressCheck"], Q]
+    [["--overrideAddressCheck"], Q],
+    [["--noFallbackPort"], Q]
   ],
   namedArgsStopper: "--",
   allowNameRepeats: true,
@@ -7389,7 +7390,7 @@ h({
   autoThrow: true,
   suggestionLimit: 1
 });
-var { help, version: version2, debug, port, address, overrideAddressCheck } = argsInfo.simplifiedNames;
+var { help, version: version2, debug, port, address, overrideAddressCheck, noFallbackPort } = argsInfo.simplifiedNames;
 if (help) {
   console.log(`
     Usage: sss
@@ -7517,9 +7518,12 @@ while (port < 1e4) {
     break;
   } catch (error) {
     if (!error.stack.includes("AddrInUse: Address already in use (os error 48)")) {
-      shouldWarn && console.warn(`error when trying to start server on port ${port}, trying next port`, error);
-    } else {
       throw error;
+    } else {
+      if (noFallbackPort) {
+        throw error;
+      }
+      shouldWarn && console.warn(`error when trying to start server on port ${port}, trying next port`, error);
     }
     port++;
   }
