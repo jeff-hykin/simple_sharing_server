@@ -185,9 +185,9 @@ while (port < 10000) {
         break
     } catch (error) {
         if (!error.stack.includes("AddrInUse: Address already in use (os error 48)")) {
-            shouldWarn && console.warn(`error when trying to start server on port ${port}, trying next port`, error)
-        } else {
             throw error
+        } else {
+            shouldWarn && console.warn(`error when trying to start server on port ${port}, trying next port`, error)
         }
         port++
     }
