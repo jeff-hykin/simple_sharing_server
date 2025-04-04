@@ -37,8 +37,8 @@ Once the server is running, you can use the following endpoints (more examples b
 import requests
 import json
 
-process1Height = 100
-process1Width = 200
+process1_height = 100
+process1_width = 200
 
 # 
 # 
@@ -55,8 +55,8 @@ url = f"http://127.0.0.1:7070/{encoded_keys}"
 response = requests.post(
     url,
     data=json.dumps({
-        "height": process1Height,
-        "width": process1Width,
+        "height": process1_height,
+        "width": process1_width,
     }),
     headers={
         "Content-Type": "application/json",
@@ -71,10 +71,9 @@ print(f"server response timestamp is: {data['t']}")
 keys = ["process1", "height"]
 encoded_keys = "/".join(map(lambda x: requests.utils.quote(x), keys))
 url = f"http://127.0.0.1:7070/{encoded_keys}"
-
 response = requests.post(
     url,
-    data=json.dumps(process1Height),
+    data=json.dumps(process1_height),
     headers={
         "Content-Type": "application/json",
     }
@@ -85,10 +84,10 @@ print(f"server response timestamp is: {data['t']}")
 
 # 
 # merge extra data (without overwriting process1.width)
+# 
 keys = ["process1", "height"]
 encoded_keys = "/".join(map(lambda x: requests.utils.quote(x), keys))
 url = f"http://127.0.0.1:7070/{encoded_keys}"
-
 response = requests.put(
     url,
     data=json.dumps({
@@ -98,7 +97,6 @@ response = requests.put(
         "Content-Type": "application/json",
     }
 )
-
 data = response.json()
 print(f"server response timestamp is: {data['t']}")
 
@@ -135,7 +133,6 @@ print(f"Data: {data}")
 #         'name': 'process1'
 #     }
 # }
-
 ```
 
 ### Js Example
