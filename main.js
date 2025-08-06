@@ -70,17 +70,19 @@ let hostIp = address
 // host ip
 // 
     if (!overrideAddressCheck) {
-        const hostIps = Deno.networkInterfaces()
-            .filter((each) => each.family == "IPv4")
-            .map((each) => each.address)
-            // first ip is usually 127.0.0.1 (localhost)
-        if (hostIps.length == 0) {
-            throw new Error(`No valid network interfaces found (I listed all available ip addresses, and it was empty according to Deno.networkInterfaces)\nUse --overrideAddressCheck to override this check`)
-        }
-        if (hostIp != "localhost" && !hostIps.some(each=>each==hostIp)) {
-            hostIp = hostIps[0]
-            if (shouldWarn) {
-                console.warn(`The selected ${address} is not a valid ip, valid addresses are\n${JSON.stringify(hostIps)}\nFalling back on ${hostIp}\nUse --overrideAddressCheck to override this behavior / check`)
+        if (hostIp != "0.0.0.0") {
+            const hostIps = Deno.networkInterfaces()
+                .filter((each) => each.family == "IPv4")
+                .map((each) => each.address)
+                // first ip is usually 127.0.0.1 (localhost)
+            if (hostIps.length == 0) {
+                throw new Error(`No valid network interfaces found (I listed all available ip addresses, and it was empty according to Deno.networkInterfaces)\nUse --overrideAddressCheck to override this check`)
+            }
+            if (hostIp != "localhost" && !hostIps.some(each=>each==hostIp)) {
+                hostIp = hostIps[0]
+                if (shouldWarn) {
+                    console.warn(`The selected ${address} is not a valid ip, valid addresses are\n${JSON.stringify(hostIps)}\nFalling back on ${hostIp}\nUse --overrideAddressCheck to override this behavior / check`)
+                }
             }
         }
     } 
