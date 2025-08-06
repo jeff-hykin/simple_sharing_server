@@ -10,7 +10,7 @@ const argsInfo = parseArgs({
         [["--version", ], flag, ],
         [["--debug", "-d", ], flag, ],
         [["--port"], initialValue(`7070`), (str)=>str],
-        [["--address"], initialValue(`127.0.0.1`), (str)=>str],
+        [["--address"], initialValue(`0.0.0.0`), (str)=>str],
         [["--overrideAddressCheck", ], flag, ],
         [["--noFallbackPort", ], flag, ],
     ],
